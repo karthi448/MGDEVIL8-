@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebOS - Linux Simulator</title>
+    <link rel="stylesheet" href="style.css">
+    <!-- Phosphor Icons or Boxicons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Boot Screen -->
+    <div id="boot-screen" class="screen">
+        <div class="logo-container">
+            <i class='bx bxl-tux bx-tada' style='font-size: 80px; color: #fff;'></i>
+            <h1 class="os-name">WebOS</h1>
+        </div>
+        <div class="loader"></div>
+        <div class="boot-text">Loading kernel modules...</div>
+    </div>
+
+    <!-- Login Screen -->
+    <div id="login-screen" class="screen hidden">
+        <div class="login-box glass-panel">
+            <img src="https://ui-avatars.com/api/?name=User&background=random" alt="User Avatar" class="avatar">
+            <h2>User</h2>
+            <div class="input-group">
+                <input type="password" id="login-password" placeholder="Password (press Enter)" autocomplete="off">
+                <button id="login-btn"><i class='bx bx-right-arrow-alt'></i></button>
+            </div>
+            <p class="hint">Hint: Just press Enter</p>
+        </div>
+    </div>
+
+    <!-- Desktop -->
+    <div id="desktop" class="screen hidden">
+        <!-- Desktop Icons -->
+        <div class="desktop-icons" id="desktop-icons">
+            <div class="desktop-icon" data-app="terminal">
+                <div class="icon-img"><i class='bx bx-terminal'></i></div>
+                <span>Terminal</span>
+            </div>
+            <div class="desktop-icon" data-app="files">
+                <div class="icon-img"><i class='bx bx-folder'></i></div>
+                <span>Files</span>
+            </div>
+            <div class="desktop-icon" data-app="browser">
+                <div class="icon-img"><i class='bx bx-globe'></i></div>
+                <span>Browser</span>
+            </div>
+            <div class="desktop-icon" data-app="calculator">
+                <div class="icon-img"><i class='bx bx-calculator'></i></div>
+                <span>Calculator</span>
+            </div>
+            <div class="desktop-icon" data-app="editor">
+                <div class="icon-img"><i class='bx bx-notepad'></i></div>
+                <span>Notepad</span>
+            </div>
+            <div class="desktop-icon" data-app="settings">
+                <div class="icon-img"><i class='bx bx-cog'></i></div>
+                <span>Settings</span>
+            </div>
+        </div>
+
+        <!-- Windows Container -->
+        <div id="windows-container"></div>
+
+        <!-- Taskbar -->
+        <div id="taskbar" class="glass-panel">
+            <div class="start-btn" id="start-btn">
+                <i class='bx bxl-tux bx-sm'></i>
+            </div>
+            <div class="taskbar-apps" id="taskbar-apps">
+                <!-- Open apps instances will go here -->
+            </div>
+            <div class="system-tray">
+                <i class='bx bx-wifi'></i>
+                <i class='bx bx-battery'></i>
+                <div class="clock" id="clock">12:00 PM</div>
+            </div>
+        </div>
+
+        <!-- Start Menu -->
+        <div id="start-menu" class="glass-panel hidden">
+            <div class="user-info">
+                <img src="https://ui-avatars.com/api/?name=User&background=random" alt="Avatar">
+                <span>User</span>
+            </div>
+            <div class="menu-items">
+                <div class="menu-item" data-app="terminal">
+                    <i class='bx bx-terminal'></i>
+                    <span>Terminal</span>
+                </div>
+                <div class="menu-item" data-app="files">
+                    <i class='bx bx-folder'></i>
+                    <span>File Explorer</span>
+                </div>
+                <div class="menu-item" data-app="browser">
+                    <i class='bx bx-globe'></i>
+                    <span>Internet Browser</span>
+                </div>
+                <div class="menu-item" data-app="calculator">
+                    <i class='bx bx-calculator'></i>
+                    <span>Calculator</span>
+                </div>
+                <div class="menu-item" data-app="editor">
+                    <i class='bx bx-notepad'></i>
+                    <span>Text Editor</span>
+                </div>
+                <div class="menu-item" data-app="settings">
+                    <i class='bx bx-cog'></i>
+                    <span>Settings</span>
+                </div>
+            </div>
+            <div class="power-options">
+                <div class="power-btn" id="power-btn">
+                    <i class='bx bx-power-off'></i>
+                    <span>Shut Down</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- App Templates -->
+    <template id="tpl-terminal">
+        <div class="terminal-app">
+            <div class="terminal-output" id="terminal-output">
+                <div>Welcome to WebOS Terminal</div>
+                <div>Type 'help' for a list of commands.</div>
+            </div>
+            <div class="terminal-input-line">
+                <span class="prompt">user@webos:~$</span>
+                <input type="text" class="terminal-input" autocomplete="off" spellcheck="false" autofocus>
+            </div>
+        </div>
+    </template>
+    
+    <template id="tpl-files">
+        <div class="files-app flex-app">
+            <div class="sidebar glass-panel-inner">
+                <ul>
+                    <li class="nav-item active" data-path="/home/user"><i class='bx bxs-home'></i> Home</li>
+                    <li class="nav-item" data-path="/home/user/Documents"><i class='bx bxs-folder'></i> Documents</li>
+                    <li class="nav-item" data-path="/home/user/Pictures"><i class='bx bxs-folder'></i> Pictures</li>
+                    <li class="nav-item" data-path="/home/user/Downloads"><i class='bx bxs-folder'></i> Downloads</li>
+                </ul>
+            </div>
+            <div class="file-view flex-col">
+                <div class="file-toolbar glass-panel-inner">
+                    <button class="tool-btn special" id="btn-mount" style="color: var(--primary-color); font-weight:bold;"><i class='bx bx-hdd'></i> Mount Drive</button>
+                    <button class="tool-btn" id="btn-up"><i class='bx bx-up-arrow-alt'></i> Up</button>
+                    <button class="tool-btn" id="btn-new-folder"><i class='bx bx-folder-plus'></i> New Folder</button>
+                    <button class="tool-btn" id="btn-new-file"><i class='bx bx-file-blank'></i> New File</button>
+                    <button class="tool-btn danger" id="btn-delete"><i class='bx bx-trash'></i> Delete</button>
+                </div>
+                <div class="path-bar glass-panel-inner" id="fm-path">/home/user</div>
+                <div class="file-grid" id="file-grid-container">
+                    <!-- Dynamic files -->
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template id="tpl-editor">
+        <div class="editor-app flex-col">
+            <div class="editor-toolbar">
+                <button class="tool-btn" id="editor-save-btn"><i class='bx bx-save'></i> Save</button>
+                <button class="tool-btn" id="editor-clear-btn"><i class='bx bx-trash'></i> Clear</button>
+            </div>
+            <textarea class="editor-textarea" placeholder="Start typing here..."></textarea>
+        </div>
+    </template>
+
+    <template id="tpl-browser">
+        <div class="browser-app flex-col" style="height:100%;">
+            <div class="browser-toolbar glass-panel-inner">
+                <button class="tool-btn" id="browser-back"><i class='bx bx-left-arrow-alt'></i></button>
+                <button class="tool-btn" id="browser-forward"><i class='bx bx-right-arrow-alt'></i></button>
+                <button class="tool-btn" id="browser-reload"><i class='bx bx-refresh'></i></button>
+                <input type="text" id="browser-url" class="url-bar" value="https://bing.com">
+                <button class="tool-btn" id="browser-go"><i class='bx bx-right-arrow-circle'></i></button>
+            </div>
+            <iframe id="browser-iframe" class="browser-frame" src="https://bing.com" frameborder="0"></iframe>
+        </div>
+    </template>
+
+    <template id="tpl-calculator">
+        <div class="calc-app">
+            <div class="calc-display" id="calc-display">0</div>
+            <div class="calc-grid">
+                <button class="calc-btn op" data-val="C">C</button>
+                <button class="calc-btn op" data-val="DEL">DEL</button>
+                <button class="calc-btn op" data-val="%">%</button>
+                <button class="calc-btn op special" data-val="/">/</button>
+                
+                <button class="calc-btn" data-val="7">7</button>
+                <button class="calc-btn" data-val="8">8</button>
+                <button class="calc-btn" data-val="9">9</button>
+                <button class="calc-btn op special" data-val="*">*</button>
+                
+                <button class="calc-btn" data-val="4">4</button>
+                <button class="calc-btn" data-val="5">5</button>
+                <button class="calc-btn" data-val="6">6</button>
+                <button class="calc-btn op special" data-val="-">-</button>
+                
+                <button class="calc-btn" data-val="1">1</button>
+                <button class="calc-btn" data-val="2">2</button>
+                <button class="calc-btn" data-val="3">3</button>
+                <button class="calc-btn op special" data-val="+">+</button>
+                
+                <button class="calc-btn" data-val="0" style="grid-column: span 2; border-radius: 20px;">0</button>
+                <button class="calc-btn" data-val=".">.</button>
+                <button class="calc-btn op special" data-val="=">=</button>
+            </div>
+        </div>
+    </template>
+
+    <template id="tpl-settings">
+        <div class="settings-app flex-app">
+            <div class="sidebar glass-panel-inner" style="width:150px;">
+                <ul>
+                    <li class="active settings-tab" data-tab="appearance"><i class='bx bx-palette'></i> Appearance</li>
+                    <li class="settings-tab" data-tab="system"><i class='bx bx-info-circle'></i> System Info</li>
+                </ul>
+            </div>
+            <div class="settings-view" style="flex:1; padding:20px; overflow-y:auto;">
+                <div id="tab-appearance">
+                    <h2>Appearance</h2>
+                    <br>
+                    <div class="settings-section">
+                        <h3>Custom Wallpaper</h3>
+                        <p class="hint" style="margin-bottom:10px;">Select a wallpaper or add a custom URL</p>
+                        <div class="wallpaper-options">
+                            <img class="wp-thumb" src="https://images.unsplash.com/photo-1550684848-fac1c5b4e853?q=80&w=2070&auto=format&fit=crop" alt="WP 1">
+                            <img class="wp-thumb" src="https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=2070&auto=format&fit=crop" alt="WP 2">
+                            <img class="wp-thumb" src="https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2070&auto=format&fit=crop" alt="WP 3">
+                            <img class="wp-thumb" src="https://images.unsplash.com/photo-1538370965046-79c0d6907d47?q=80&w=2070&auto=format&fit=crop" alt="WP 4">
+                        </div>
+                        <div class="input-group" style="margin-top:20px; max-width:400px;">
+                            <input type="text" id="custom-wp-url" placeholder="Image URL...">
+                            <button id="apply-custom-wp">Apply</button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="tab-system" class="hidden">
+                    <h2>System Information</h2>
+                    <br>
+                    <div class="sys-info glass-panel-inner">
+                        <p><strong>OS Name:</strong> WebOS Distro v2.0</p>
+                        <p><strong>Kernel:</strong> 6.1.0-web-generic</p>
+                        <p><strong>Window Manager:</strong> GlassWM</p>
+                        <p><strong>Memory:</strong> 16384 MB</p>
+                        <p><strong>Processor:</strong> Virtual CPU @ 3.40GHz</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <script src="script.js"></script>
+</body>
+</html>
