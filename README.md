@@ -7,4 +7,4 @@ join my Git-hub chennal and more informations proved
 #             THANKING YOU!
 # http://127.0.0.1:3000/Also.html
 Hello! very one New projects Upload Him in please Support
-# Warning this project is Eligal No, Problem if Using in seffly
+# Warning this project is Eligal No, Problem if Using in safley
