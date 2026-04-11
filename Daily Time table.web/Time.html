@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Schedule Planner</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-window">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2><i class="fa-solid fa-layer-group text-primary"></i> MyPlanner</h2>
+            </div>
+            
+            <nav class="nav-menu">
+                <div class="nav-group-title">Views</div>
+                <button class="nav-item active" data-view="day">
+                    <i class="fa-solid fa-calendar-day"></i> <span class="nav-text">Day</span>
+                </button>
+                <button class="nav-item" data-view="week">
+                    <i class="fa-solid fa-table-columns"></i> <span class="nav-text">Week</span>
+                </button>
+                <button class="nav-item" data-view="month">
+                    <i class="fa-regular fa-calendar-days"></i> <span class="nav-text">Month</span>
+                </button>
+            </nav>
+
+            <div class="sidebar-actions">
+                <div class="stat-box">
+                    <span id="totalEventsStat">0</span>
+                    <label>Total Events</label>
+                </div>
+            </div>
+
+            <div class="sidebar-bottom">
+                 <button class="btn btn-outline danger" id="clearAllBtn" style="margin-bottom: 12px;">
+                    <i class="fa-solid fa-trash-can"></i> Clear All
+                 </button>
+                <button class="btn btn-primary add-task-btn" id="openModalBtn">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>Add Event</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Workspace Area -->
+        <main class="main-content">
+            <header class="top-header">
+                <div class="header-left">
+                    <h1 id="headerTitle">Today</h1>
+                    <p id="currentFullDate">Date loading...</p>
+                </div>
+                <div class="header-right">
+                    <div class="time-widget" id="liveTime">00:00</div>
+                </div>
+            </header>
+
+            <div class="view-container">
+                <div id="viewWrapper" class="view-wrapper">
+                    <!-- Dynamic view content -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Event Action Modal (Delete) -->
+    <div class="modal-overlay" id="actionModal">
+        <div class="modal-content small-modal">
+            <h3 id="actionModalTitle">Manage Event</h3>
+            <p id="actionModalDesc" style="margin-bottom:24px; color:var(--text-secondary); font-size:14px;"></p>
+            <div style="display:flex; gap:12px; flex-direction:column;">
+                <button class="btn btn-danger" id="deleteEventBtn">
+                    <i class="fa-solid fa-trash"></i> Delete Event
+                </button>
+                <button class="btn btn-outline" id="closeActionModalBtn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Schedule Modal -->
+    <div class="modal-overlay" id="taskModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fa-solid fa-calendar-plus" style="color:var(--primary); margin-right:8px;"></i> New Event</h2>
+                <button class="cancel-icon-btn" id="closeModalBtn" type="button"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <form id="scheduleForm" class="schedule-form">
+                <div class="form-group">
+                    <label>Event Name</label>
+                    <input type="text" id="taskTitle" required placeholder="e.g. Doctor Appointment">
+                </div>
+                <div class="form-row">
+                    <div class="form-group flex-col">
+                        <label>Date</label>
+                        <input type="date" id="taskDate" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group flex-col">
+                        <label>Time</label>
+                        <input type="time" id="taskTime" required>
+                    </div>
+                    <div class="form-group flex-col">
+                        <label>Duration</label>
+                        <select id="taskDuration" required>
+                            <option value="15">15 min</option>
+                            <option value="30">30 min</option>
+                            <option value="45">45 min</option>
+                            <option value="60" selected>1 hour</option>
+                            <option value="90">1.5 hours</option>
+                            <option value="120">2 hours</option>
+                            <option value="240">4 hours</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group" style="padding-top: 10px;">
+                    <label>Category Color</label>
+                    <div class="category-segmented">
+                        <label class="seg-item">
+                            <input type="radio" name="category" value="blue" checked>
+                            <span class="seg-text" style="color:var(--cat-blue);"><i class="fa-solid fa-circle"></i> Blue</span>
+                        </label>
+                        <label class="seg-item">
+                            <input type="radio" name="category" value="green">
+                            <span class="seg-text" style="color:var(--cat-green);"><i class="fa-solid fa-circle"></i> Green</span>
+                        </label>
+                        <label class="seg-item">
+                            <input type="radio" name="category" value="red">
+                            <span class="seg-text" style="color:var(--cat-red);"><i class="fa-solid fa-circle"></i> Red</span>
+                        </label>
+                        <label class="seg-item">
+                            <input type="radio" name="category" value="purple">
+                            <span class="seg-text" style="color:var(--cat-purple);"><i class="fa-solid fa-circle"></i> Purple</span>
+                        </label>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary full-width submit-btn" style="margin-top: 10px;">
+                    Save to Schedule
+                </button>
+            </form>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
